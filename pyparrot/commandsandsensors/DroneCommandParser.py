@@ -17,6 +17,7 @@ class DroneCommandParser:
         self.common_commands = untangle.parse(join(dir_path, 'common.xml'))
         self.minidrone_commands = untangle.parse(join(dir_path, 'minidrone.xml'))
         self.ardrone3_commands = untangle.parse(join(dir_path, 'ardrone3.xml'))
+        self.gimbal_commands = untangle.parse(join(dir_path, 'gimbal.xml'))
 
 
     def get_command_tuple(self, project, myclass, cmd):

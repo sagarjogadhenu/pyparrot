@@ -117,8 +117,15 @@ class DroneVision:
             self.ffmpeg_process = \
                 subprocess.Popen(cmdStr, shell=True, cwd=self.imagePath, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         else:
-            self.ffmpeg_process = \
-                subprocess.Popen("ffmpeg -i rtsp://192.168.99.1/media/stream2 -r 30 image_%03d.png",
+            if self.drone_object.drone_type == "Anafi":
+                ip_address = self.drone_object.drone_connection.ip_address
+
+                self.ffmpeg_process = \
+                    subprocess.Popen("ffmpeg -i rtsp://"+ip_address+"/live -r 30 image_%03d.png",
+                               shell=True, cwd=self.imagePath, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            else:
+                self.ffmpeg_process = \
+                    subprocess.Popen("ffmpeg -i rtsp://192.168.99.1/media/stream2 -r 30 image_%03d.png",
                                shell=True, cwd=self.imagePath, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
         # immediately start the vision buffering (before we even know if it succeeded since waiting puts us behind)

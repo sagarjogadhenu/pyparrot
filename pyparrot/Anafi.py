@@ -878,3 +878,36 @@ class Anafi():
 
         while (not self.sensors.video_resolutions_changed):
             self.smart_sleep(0.1)
+
+
+    def set_gimbal_target(self, gimbal_id, mode, yaw_ref, yaw, pitch_ref, pitch, roll_ref, roll):
+        """
+        set camera gimbal
+        :param gimbal_id: # set to zero
+        :param mode:      # possible values are 'position' and 'velocity'
+        :yaw_ref          # Yaw frame of reference
+        :yaw              # yaw in degrees
+        :pitch_ref        # pitch frame of refernce
+        :pitch            # pitch in degrees
+        :roll_ref         # roll frame of reference
+        :roll             # roll in degrees
+        """
+
+        my_file = self.command_parser.gimbal_commands
+        project_id = int(my_file.feature['id'])
+        class_id = 0
+        for child in my_file.feature.msgs:
+          for subchild in child.cmd:
+             if subchild['name'] == "set_target":
+               cmd_id = int(subchild['id'])
+               print(cmd_id)
+
+        mode_enum = 0
+        yaw_ref_enum = 2
+        pitch_ref_enum = 2
+        roll_ref_enum = 2
+
+        cmd_tuple = [project_id, class_id, cmd_id]
+        param_tuple = [gimbal_id, mode_enum, yaw_ref_enum, yaw, pitch_ref_enum, pitch, roll_ref_enum, roll]
+        param_type_tuple = ['u8', 'u32','u32', 'float', 'u32', 'float', 'u32', 'float']
+        return self.drone_connection.send_param_command_packet(cmd_tuple, param_tuple, param_type_tuple, ack=False)
